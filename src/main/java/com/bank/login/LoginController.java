@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -39,7 +40,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/login")
-	public String login(HttpServletRequest request) {
+	public String login(HttpServletRequest request,Model model) {
 
 		LoginDTO dto = new LoginDTO();
 		dto.setM_id(request.getParameter("id"));
@@ -57,16 +58,35 @@ public class LoginController {
 			// 세션을 만들어서 로그인 지정 시간동안 유지 시킵니다.
 
 			HttpSession session = request.getSession();
+			
+			//세션타임아웃 구현하기위해 jsp로 보낼 모델구현 
+			model.addAttribute("loginResult",1);
+			
+			int interval = 20;  //15초 설정
+			session.setMaxInactiveInterval(interval);  //세션종료시간설정 초단위 20초부여
+			
+			if(interval < 10 ) {
+				interval = 10;
+			
+			} else if ( interval ==0) {
+				session.invalidate(); // 세션초기화 = 종료 = 세션의 모든속성 값을제거
+				System.out.println("사용자로그인시간이만료되었습니다.");
+				return "redirect:login";
+			}
+			
 			session.setAttribute("mname", result.getM_name());
 			session.setAttribute("mid", request.getParameter("id"));
-	
+			session.setAttribute("mpw", request.getParameter("pw"));
+			
+			//session.setAttribute("mpw", result.getM_pw());
 			// 세션 : 서버, 쿠키 : 클라이언트(브라우저)에 보관 됩니다.
 			return "redirect:/index";
 			// 정상적 로그인했다면 인덱스로가기
+			//SecureRandom
 
 		} else { 
 	
-			return "login"; // 암호 아이디가 일치 하지 않은 사람은 다시 로그인 하기
+			return "redirect:login"; // 암호 아이디가 일치 하지 않은 사람은 다시 로그인 하기
 		}
 	}
 	
@@ -83,7 +103,7 @@ public class LoginController {
 		session.setMaxInactiveInterval(0); // 세션 유지시간을 0으로 =종료시키기
 		session.invalidate(); // 세션초기화 = 종료 = 세션의 모든속성 값을제거
 
-		return "redirect:index";
+		return "redirect:login";
 
 	}
 

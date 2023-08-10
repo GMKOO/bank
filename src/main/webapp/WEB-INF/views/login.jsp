@@ -10,58 +10,155 @@
 	crossorigin="anonymous"></script>	
 	
 <%
-    String mname = (String) session.getAttribute("mname");
+int timeout= session.getMaxInactiveInterval();
+%>	
+
+<%
+int loginResult =(int)(request.getAttribute("loginResult"));
 %>
+
 
 <html>
 <head>
 <title>로그인</title>
 <script type="text/javascript">
 
-
-
-
-//Jquery
+/*
 $(function() {
+	$(".login").click(function() {
+		
+		
+		
+	});
+});
+
+
+*/
+
+// timeout controller에서 인터벌타임을 세션에 담아서jsp로보내고 jsp에서 선언후 스크립트에서 사용 .
+//Jquery 
+var sessionTimeout = <%= timeout %>;
+var redirectToLoginPage = true; // 리다이렉트를 처음에는 허용
+var result1 = <%= loginResult %>; // 스크립트 변수에 loginCount 값을 할당
+
+
+
+
+ if (result1 == 1) {
+
+
+function startSessionTimer() {
+    setTimeout(function() {
+        $("#autoLogoutPopup").show(); // 팝업 열기
+    }, sessionTimeout-10000); // 세션 만료 10초 전에 팝업 열기
+}
+
+function redirectToLoginPage1() {
+	if (redirectToLoginPage) {
+        redirectToLoginPage = false; // 한 번 리다이렉트한 후에는 허용하지 않음
+    location.href = "./login"; // 로그인 페이지로 리다이렉트
+}
+}
+
+// 페이지 로드 시 타이머 시작
+$(document).ready(function() {
+    startSessionTimer();
+
+    // 세션 만료 시간이 지나면 로그인 페이지로 리다이렉트
+    setTimeout(function() {
+        redirectToLoginPage1();
+    }, sessionTimeout); // 세션 만료 시간이 되면 로그인 페이지로 리다이렉트
+});
+
+
+}
+
+
+/*
+setTimeout(function() {
+	
+	alert("진짜열림?");
+	
+}, timeout);
+
+*/
+		
+		
+	
+
+		
+	var mid="${mid}";
+	var mpw="${mpw}";
+
+$(function() {
+	
 	$(".login").click(function() {
 		let id = $("#id").val();
 		let pw = $("#pw").val();
-		if (id.length < 4) {
-			alert("아이디에 길이가 짧습니다.");
+		if(id=="admin") {
+	//문자열 비교이니 "" 이거 까먹지마!!!
+
+		alert("로그인에 성공하셨습니다"+id+pw);
+		}
+		
+		//}else {
+			
+		//	alert("아이디와 비밀번호가 잘못 입력되었습니다.");
+	//	}
+		
+		
+	});
+	});
+		/*	
+		if("${mid}" == id && "${mpw}"== pw) {
+			// 
+	$("#loginForm").hide();
+			alert("id"+id);
+			alert("pw1"+pw +mpw +${mpw}+"${mpw}");
+			
+			alert("로그인에 성공하셨습니다");
+		} else(id.length < 5 && pw.length <5 ) {
+
+			
+			alert("pw1"+pw +mpw +${mpw}+"${mpw}");
+			
+			alert("아이디와 비밀번호를 잘못 입력하셨습니다.");
+		}
+	});
+});
+
+	
+		
+		
+		/*		if (id.length < 4 ||  pw.length < 5) ) {
+			alert("아이디와 비밀번호 길이가 짧습니다.");
 			$("#id").focus();
 		} else {
-			if (pw.length < 5) {
-				alert("패스워드 길이가 짧습니다.");
-				$("#pw").focus();
-			} else { id=
+			if(${result.getCount() == 1}) {
 				
+		alert( ${mname} + "님 로그인 하셨습니다");
+			     $("#loginForm").hide();
+			} else {
 				
-			    $(function() { 
-			    	
-			    
-			    	
-			    	
-			    	
-			    	
-			        if () {
-			            $("#loginForm").hide();
-			        }
-			    });
+				alert( " 아이디와 비밀번호가 일치 하지 않습니다")
+			}
+			
+		}
+			
+			
 		
 				
+				*/	
+			 				
 				//아이디하고 암호하고 정확하게 입력되었습니다.
 			
 
-			} 
-				
-				
-			}
-		}
-	});
 
 
 
 // 세션 만료 알림 표시 함수
+
+/*-
 function showSessionExpirationAlert() {
 	
 
@@ -74,7 +171,7 @@ function showSessionExpirationAlert() {
 			
 		}
 		
-	} else
+	} 
 		
 	
 	
@@ -86,10 +183,12 @@ function showSessionExpirationAlert() {
 	    // 예: 로그아웃 처리 또는 다른 작업 수행
 	    // 여기에 필요한 코드를 추가하세요
 	  }
-	}
+				}
 	
 //세션 상태 확인 및 알림 설정 함수
-
+/*
+ * 
+ 
 $.ajax({
   url: '/api/checkSession',
   method: 'GET',
@@ -146,20 +245,38 @@ function getSessionData() {
 
 
 
-
+	*/
 
 </script>
 </head>
 <%@ include file="menu.jsp" %>
+		
+		
+		${sessionScope.mname}
+		${mname}
+		${timeout}
+		
+		${mpw}
+		${mid }
+		${sessionScope.mid}
+		
+		<div id="autoLogoutPopup" style="display: none;">
+    <!-- 팝업 내용 -->
+    <p>Your session is about to expire.</p>
+</div>
 
 <nav>
  <c:choose>
 			<c:when test="${sessionScope.mname eq null }">
-				<li class="log1" onclick="location.href='./login;">Login</li>
+				<li class="log1" onclick="location.href='./login'" >
+				
+				
+				</li>
+				  
 			</c:when>
 			<c:otherwise>
 				<li class="log2"  onclick="location.href='./myInfo'">${sessionScope.mname }님 반갑습니다.</li>
-				<li class="log1" type="button" onclick="location.href='./logout'">로그아웃</li>
+				<li class="log1" type="button" onclick="location.href='./logout'" style="background-color: black ; color: white;" >로그아웃</li>
 			</c:otherwise>
 		</c:choose>
 		</nav>
@@ -174,12 +291,12 @@ function getSessionData() {
 	
     <input type="text" minlength="4" maxlength="20" placeholder="아이디"  
     required="required" name="id" class="loginID" id="id" onchange="" />
-    
+     
     <input type="password" name="pw" id="pw" class="loginPW" minlength="5" maxlength="12" 
     required="required" placeholder="********" />
 
     	<span>
-		<button class="login" type="submit" onclick="/" onchange="check()">로그인</button>
+		<button class="login" type="submit" onclick="/login" onchange="">로그인</button>
 	</span>
 </form>
 
