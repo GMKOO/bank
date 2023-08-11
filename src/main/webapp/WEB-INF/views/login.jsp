@@ -2,77 +2,126 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/login.css">
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"
-	integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-	crossorigin="anonymous"></script>	
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" 
+integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+crossorigin="anonymous"></script>	
 	
-<%
-int timeout= session.getMaxInactiveInterval();
-%>	
-
-<%
-int loginResult =(int)(request.getAttribute("loginResult"));
-%>
 
 
 <html>
 <head>
 <title>로그인</title>
+
 <script type="text/javascript">
 
-/*
-$(function() {
-	$(".login").click(function() {
-		
-		
-		
-	});
-});
 
 
-*/
+var sessionTimeout= <%= session.getMaxInactiveInterval() %>	;
+
+ // 리다이렉트를 처음에는 허용
+// var loginResult = 
 
 // timeout controller에서 인터벌타임을 세션에 담아서jsp로보내고 jsp에서 선언후 스크립트에서 사용 .
 //Jquery 
-var sessionTimeout = <%= timeout %>;
-var redirectToLoginPage = true; // 리다이렉트를 처음에는 허용
-var result1 = <%= loginResult %>; // 스크립트 변수에 loginCount 값을 할당
 
+ // 스크립트 변수에 loginCount 값을 할당
+ 
+ 		let id = $("#id").val();
+		let pw = $("#pw").val();
+ 				
+	
+$(function() {
+	$(".login").click(function() {
+	
+		
+		$.ajax({
+			
+			url : "./login", // 실제 서버 URL을 지정해주세요
+			type : "post",
+			data : {"id" : id , "pw" : pw }, // 전송할 데이터
+			dataType : "json",
+			success: function(data) {
+				alert("왜안되." + data);
+				
+				 location.href = "./login";
+	
+	
+			
+			
+			},
+			error: function(request,status,error) {
+				alert("서버 오류가 발생했습니다."+error);
+			}
+		
+		});
+	});
+});
+		
 
+/*
+		if( id.length < 5 ) { 	
+			alert(id.length);
+			alert("아이디가 잘못 입력되었습니다.");
+			$("#id").focus();
+		}else if(pw.length < 5 ) {
+			alert(pw.length);
+				alert("아이디와 비밀번호를 잘못 입력되었습니다.");	
+				$("#pw").focus();
+		
+		}else{
+			
+			
+		}
+	});
+});
+		
+		
+	*/ /*	
+		$(function() {	
+	          $(".loginForm").hide(); 
+	          $(".join").hide();
+	          $(".serchID").hide();
+	          $(".resetPW").hide();
+			});
+			
+		
+		      if (sessionTimeout == 10) {
+		      	    // 팝업 창을 띄웁니다.
+		      	    alert("로그인 시간이 10초 남았습니다.");
+		      	}
 
+		      	if (sessionTimeout == 0) {
+		      	    // 세션 초기화 시키고 로그인 만료 창을 띄웁니다.
+		      	    alert("사용자 로그인 시간이 만료되었습니다.");
+		      	    location.href = "./login"; // 로그인 페이지로 리다이렉트
+			}
+		      	if (sessionTimeout == 0) {
+	      	    // 세션 초기화 시키고 로그인 만료 창을 띄웁니다.
+	      	    alert("사용자 로그인 시간이 만료되었습니다.");
+	      	    location.href = "./login"; // 로그인 페이지로 리다이렉트
+			}
 
- if (result1 == 1) {
+				}
 
+*/
+	//문자열 비교이니 "" 이거 까먹지마!!!
+			
+	
+	
+	//if( id.length < 5  ) { 		
+		
+		//alert("${id}");
+		//alert(pw;)
+		
+	
 
-function startSessionTimer() {
-    setTimeout(function() {
-        $("#autoLogoutPopup").show(); // 팝업 열기
-    }, sessionTimeout-10000); // 세션 만료 10초 전에 팝업 열기
-}
-
-function redirectToLoginPage1() {
-	if (redirectToLoginPage) {
-        redirectToLoginPage = false; // 한 번 리다이렉트한 후에는 허용하지 않음
-    location.href = "./login"; // 로그인 페이지로 리다이렉트
-}
-}
-
-// 페이지 로드 시 타이머 시작
-$(document).ready(function() {
-    startSessionTimer();
+	
 
     // 세션 만료 시간이 지나면 로그인 페이지로 리다이렉트
-    setTimeout(function() {
-        redirectToLoginPage1();
-    }, sessionTimeout); // 세션 만료 시간이 되면 로그인 페이지로 리다이렉트
-});
-
-
-}
-
 
 /*
 setTimeout(function() {
@@ -82,33 +131,25 @@ setTimeout(function() {
 }, timeout);
 
 */
-		
-		
-	
 
-		
-	var mid="${mid}";
-	var mpw="${mpw}";
-
+/*
 $(function() {
-	
 	$(".login").click(function() {
-		let id = $("#id").val();
-		let pw = $("#pw").val();
-		if(id=="admin") {
-	//문자열 비교이니 "" 이거 까먹지마!!!
+		
+		
+		
+	});
+});
 
-		alert("로그인에 성공하셨습니다"+id+pw);
-		}
-		
-		//}else {
-			
-		//	alert("아이디와 비밀번호가 잘못 입력되었습니다.");
-	//	}
+
+*/
+
 		
 		
-	});
-	});
+	
+
+		
+
 		/*	
 		if("${mid}" == id && "${mpw}"== pw) {
 			// 
@@ -126,28 +167,6 @@ $(function() {
 		}
 	});
 });
-
-	
-		
-		
-		/*		if (id.length < 4 ||  pw.length < 5) ) {
-			alert("아이디와 비밀번호 길이가 짧습니다.");
-			$("#id").focus();
-		} else {
-			if(${result.getCount() == 1}) {
-				
-		alert( ${mname} + "님 로그인 하셨습니다");
-			     $("#loginForm").hide();
-			} else {
-				
-				alert( " 아이디와 비밀번호가 일치 하지 않습니다")
-			}
-			
-		}
-			
-			
-		
-				
 				*/	
 			 				
 				//아이디하고 암호하고 정확하게 입력되었습니다.
@@ -187,7 +206,7 @@ function showSessionExpirationAlert() {
 	
 //세션 상태 확인 및 알림 설정 함수
 /*
- * 
+
  
 $.ajax({
   url: '/api/checkSession',
@@ -243,26 +262,37 @@ function getSessionData() {
 	// 페이지 로드 시 세션 정보 가져오기 시작
 	getSessionData();
 
+	${sessionScope.mname}
+	${mname}
+	${timeout}
+	${sessionScope.loginResult}
+	
+	${mpw}
+	${mid }
+	${sessionScope.mid}
+	${result}
 
 
 	*/
+	//특수문자 공백 입력방지  스크립트  + oninput사용
+	function validateInput(input) {
+	    var value = input.value;
+	    if (/[^\w\d]/.test(value) || /\s/.test(value)) {
+	        input.value = value.replace(/[^\w\d]/g, "").replace(/\s/g, "");
+	        alert("특수문자와 공백은 입력할 수 없습니다.");
+	    }
+	}
 
 </script>
 </head>
-<%@ include file="menu.jsp" %>
+
 		
-		
-		${sessionScope.mname}
-		${mname}
-		${timeout}
-		
-		${mpw}
-		${mid }
-		${sessionScope.mid}
+	
+
 		
 		<div id="autoLogoutPopup" style="display: none;">
     <!-- 팝업 내용 -->
-    <p>Your session is about to expire.</p>
+    <p>팝업창</p>
 </div>
 
 <nav>
@@ -283,17 +313,17 @@ function getSessionData() {
 <body>
 
 
-	<p style="text-align: center; border: medium;">
-	<h1>e농협회원 님은 일부 조회 서비스 이용이 가능합니다.</h1> </p>
+	<p style="text-align: center; border: medium;"><h1>e농협회원 님은 일부 조회 서비스 이용이 가능합니다.</h1></p>
+
 	
 	
-	<form name="loginForm" action="./login" method="post">
+	<form name="loginForm" class="loginForm" action="./login" method="post">
 	
     <input type="text" minlength="4" maxlength="20" placeholder="아이디"  
-    required="required" name="id" class="loginID" id="id" onchange="" />
+    required="required" name="id" class="loginID" id="id" onchange="" oninput="validateInput(this)" />
      
     <input type="password" name="pw" id="pw" class="loginPW" minlength="5" maxlength="12" 
-    required="required" placeholder="********" />
+    required="required" placeholder="********" oninput="validateInput(this)" />
 
     	<span>
 		<button class="login" type="submit" onclick="/login" onchange="">로그인</button>
