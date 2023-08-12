@@ -13,6 +13,12 @@ public class LoginService {
 		
 		return loginDAO.login(dto);
 	}
+
+	public int checkID(LoginDTO dto) {
+		
+		return loginDAO.checkID(dto);
+	}
+
 	
 	
 	

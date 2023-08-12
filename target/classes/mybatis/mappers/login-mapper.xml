@@ -15,6 +15,15 @@
 
 	</select>
 	
+	<select id="checkID"  parameterType="LoginDTO" resultType="Integer">
+	
+	SELECT count(*) FROM member
+	 WHERE m_id= #{m_id} AND m_pw= #{m_pw}
+	
+
+	</select>
+	
+	
 
 
 	</mapper>

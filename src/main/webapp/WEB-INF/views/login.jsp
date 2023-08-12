@@ -30,24 +30,36 @@ var sessionTimeout= <%= session.getMaxInactiveInterval() %>	;
 
  // 스크립트 변수에 loginCount 값을 할당
  
- 		let id = $("#id").val();
-		let pw = $("#pw").val();
- 				
-	
+ 		
+		//contentType : "application/json",
+		
 $(function() {
 	$(".login").click(function() {
-	
 		
+		let id = $("#id").val();
+		let pw = $("#pw").val();
+		
+ 
 		$.ajax({
 			
-			url : "./login", // 실제 서버 URL을 지정해주세요
+			url : "./checkID", 
 			type : "post",
-			data : {"id" : id , "pw" : pw }, // 전송할 데이터
-			dataType : "json",
+			dataType:"json", 
+		
+			data : { "id" : id,
+				     "pw" : pw },
+		
+		
 			success: function(data) {
-				alert("왜안되." + data);
+				alert("왜안되." +data+data.result);
 				
-				 location.href = "./login";
+				if(data.result === 1) { 
+				alert("인증성공");
+				
+				}else { 
+					
+					alert("인증실패");
+				}
 	
 	
 			
