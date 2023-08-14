@@ -3,13 +3,27 @@ package com.bank.login;
 
 public class LoginDTO {
 	private int m_no,m_grade,count ;
+	private long a_balance;
+	public long getA_balance() {
+		return a_balance;
+	}
+	public void setA_balance(long a_balance) {
+		this.a_balance = a_balance;
+	}
+	public String getA_account_number() {
+		return a_account_number;
+	}
+	public void setA_account_number(String a_account_number) {
+		this.a_account_number = a_account_number;
+	}
 	public int getCount() {
 		return count;
 	}
 	public void setCount(int count) {
 		this.count = count;
 	}
-	private String m_name,m_personal_id_number,m_gender,m_phone,m_id,m_pw,m_email,m_addr,m_joindate;  
+	private String m_name,m_personal_id_number,m_gender,m_phone,m_id,m_pw,m_email,m_addr,m_joindate
+	,a_account_number;  
 	
 	public int getM_no() {
 		return m_no;

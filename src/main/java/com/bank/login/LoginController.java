@@ -92,7 +92,7 @@ public class LoginController {
 			//return json.toString();
 			// 정상적 로그인했다면 인덱스로가기
 			//SecureRandom
-			return "redirect:login";
+			return "login";
 
 		} else {
 			return "redirect:login";

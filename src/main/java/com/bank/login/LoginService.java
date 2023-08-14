@@ -19,6 +19,13 @@ public class LoginService {
 		return loginDAO.checkID(dto);
 	}
 
+
+
+	public LoginDTO accountInfo(LoginDTO dto) {
+		
+		return loginDAO.accountInfo(dto);
+	}
+
 	
 	
 	

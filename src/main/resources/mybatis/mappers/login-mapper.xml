@@ -23,6 +23,16 @@
 
 	</select>
 	
+	<select id="accountInfo" parameterType="LoginDTO" resultType="LoginDTO"> 
+	
+	SELECT a.a_account_number,a.a_balance
+	FROM account a
+	INNER JOIN member m ON a.m_no = m.m_no
+	WHERE m.m_id =#{m_id}
+	
+	
+	</select>
+	
 	
 
 

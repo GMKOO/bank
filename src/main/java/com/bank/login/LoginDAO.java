@@ -19,4 +19,9 @@ public class LoginDAO {
 		return sqlSession.selectOne("login.checkID", dto);
 	}
 
+	public LoginDTO accountInfo(LoginDTO dto) {
+		
+		return sqlSession.selectOne("login.accountInfo", dto);
+	}
+
 }

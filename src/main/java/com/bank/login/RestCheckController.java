@@ -6,9 +6,7 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,7 +53,7 @@ public class RestCheckController {
 			return ResponseEntity.ok(json.toString());
 			}
 	} 
-	@GetMapping(value="/name", produces = "application/json; charset=UTF-8")
+	@PostMapping(value="/name", produces = "application/json; charset=UTF-8")
 	public ResponseEntity<String> name(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 	    JSONObject json = new JSONObject();
@@ -68,17 +66,27 @@ public class RestCheckController {
 	        //HttpHeaders headers = new HttpHeaders();
 	       // headers.setContentType(MediaType.APPLICATION_JSON);
 	        System.out.println("mname컨트롤러"+mname);
-	       
-	        
 	        //return new ResponseEntity<>(mname, headers, HttpStatus.OK);
 	        return ResponseEntity.ok(json.toString());
-	     
-	     
-	      
-		    
-	
-		//return ResponseEntity.ok(json.toString());
 	}
 	
+	@PostMapping("/accountInfo")
+	public ResponseEntity<String> accountInfo (@RequestParam("id") String id) {
+		JSONObject json = new JSONObject();
+		LoginDTO dto = new LoginDTO();
+		dto.setM_id(id);
+		LoginDTO result = loginService.accountInfo(dto);
+		
+		json.put("balance",result.getA_balance());
+		json.put("account",result.getA_account_number());
+		
+		System.out.println(dto.getA_account_number());
+		System.out.println(dto.getA_balance());
+
+		System.out.println(json.toString());
+	
+		
+		return ResponseEntity.ok(json.toString());
+	}
 	
 }

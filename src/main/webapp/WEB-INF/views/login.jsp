@@ -8,7 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js" 
 integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
 crossorigin="anonymous"></script>	
-	
+
 
 
 <html>
@@ -17,9 +17,19 @@ crossorigin="anonymous"></script>
 
 <script type="text/javascript">
 
+// 세션 연장 팝업 타이머 
+$(document).ready(function() {
+    // 시간이 경과한 후 팝업 띄우기
+    setTimeout(function() {
+        if (/* 조건이 달성되었을 경우 */) {
+            showPopup();
+        }
+    }, 5000); // 5000ms (5초) 경과 후 팝업 띄우기
+});
 
 
-var sessionTimeout= <%= session.getMaxInactiveInterval() %>	;
+
+
 
  // 리다이렉트를 처음에는 허용
 // var loginResult = 
@@ -34,11 +44,21 @@ var sessionTimeout= <%= session.getMaxInactiveInterval() %>	;
 		
 $(function() {
 	$(".login").click(function() {
-		
+		event.preventDefault(); // 기본 동작을 막음 폼 action 기능 새로고침을 막아준다.
 		let id = $("#id").val();
 		let pw = $("#pw").val();
+
+		if( id.length < 5 ) { 	
+			//alert(id.length);
+			alert("아이디가 잘못 입력되었습니다.");
+			$("#id").focus();
+		}else if(pw.length < 5 ) {
+			//alert(pw.length);
+				alert("아이디와 비밀번호를 잘못 입력되었습니다.");	
+				$("#pw").focus();
 		
- 
+		}else{
+		
 		$.ajax({
 			
 			url : "./checkID", 
@@ -52,11 +72,17 @@ $(function() {
 			success: function(data) {
 				
 				if(data.result === 1) { 
+					
+					$(function() {
+				      $(".loginForm").hide(); 
+					});
+			
+				
 			
 				$.ajax({
 					
 					url : "./name", 
-					type : "get",
+					type : "post",
 					dataType:"json",
 					async : false,
 
@@ -66,16 +92,50 @@ $(function() {
 
 				alert(name+"님 어서오세요.");
 				
-				console.log("안녕");
-				console.log(data);
-				console.log(name);
+				$.ajax({
+					
+					url : "./accountInfo", 
+					type : "post",
+					dataType:"json",
+					async : false,
+					data : {"id" : id },
 
-				}, 
+								
+				success: function(data) {
+					const account = data.account;
+					const balance = data.balance;
+					//alert("계좌는"+account +"잔액은"+balance)
+					
+					var accountHtml = 
+						
+						
+			 '<form class="accountInfo" action="./login" method="post">'+
+			 '<div class="accountInfo">' +
+             '계좌번호: ' + account +
+             '잔액: ' + balance +
+             '</div>'+
+			 '<span>'+
+			 '<button class="serch" type="submit" onclick=""/>조회</button>'+
+			 '<button class="trans" type="submit" onclick=""/>이체</button>'+
+			 '</span>' +
+			 '</form>';
+                            $("body").append(accountHtml); // 계좌 정보 추가
+				
+
+				},
 				
 				error: function(request,status,error) {
 					alert("서버 오류가 발생했습니다."+error);
 					
 				}
+				
+				});
+			},
+				error: function(request,status,error) {
+					alert("서버 오류가 발생했습니다."+error);
+					
+				}
+				
 				});
 				} else { alert("아이디와 비밀번호가 틀렸습니다.");
 				  location.href = "./login";
@@ -89,10 +149,13 @@ $(function() {
 					alert("서버 오류가 발생했습니다."+error);
 				}
 			});
+		}
 
+		
 				}); 
 		
 		});
+
 
 /*	
 
@@ -123,16 +186,7 @@ $(function() {
 		  });
  */ 
  /*
-		if( id.length < 5 ) { 	
-			alert(id.length);
-			alert("아이디가 잘못 입력되었습니다.");
-			$("#id").focus();
-		}else if(pw.length < 5 ) {
-			alert(pw.length);
-				alert("아이디와 비밀번호를 잘못 입력되었습니다.");	
-				$("#pw").focus();
 		
-		}else{
 			
 			
 		}
@@ -141,12 +195,7 @@ $(function() {
 		
 		
 	*/ /*	
-		$(function() {	
-	          $(".loginForm").hide(); 
-	          $(".join").hide();
-	          $(".serchID").hide();
-	          $(".resetPW").hide();
-			});
+		
 			
 		
 		      if (sessionTimeout == 10) {
@@ -341,6 +390,7 @@ function getSessionData() {
 	        input.value = value.replace(/[^\w\d]/g, "").replace(/\s/g, "");
 	        alert("특수문자와 공백은 입력할 수 없습니다.");
 	    }
+	}
 	/*    
 	  //세션시간 시분초로 정리  
 	    function calculateAndFormatDuration(startTimestamp, endTimestamp) {
@@ -371,7 +421,7 @@ function getSessionData() {
 	    console.log(formattedDuration);	 
 	 */   
 	    
-	}
+	
 
 </script>
 </head>
@@ -416,15 +466,17 @@ function getSessionData() {
     required="required" placeholder="********" oninput="validateInput(this)" />
 
     	<span>
-		<button class="login" type="submit" onclick="location.href='./login'"/>로그인</button>
+		<button class="login" type="submit" onclick=""/>로그인</button>
 	</span>
-</form>
-
-	<div>
+	<div class=loginOption>
 	<a class="join" href="회원가입주소">e농협 회원가입</a>
 	<a class="serchID" href="ID찾기주소">ID찾기</a>
 	<a class="resetPW" href="비밀번호찾기주소">비밀번호초기화(재설정)</a>
 </div>
+	
+</form>
+
+
 
 <button type="button" onclick="location.href='./'"> 홈으로 </button>
 
