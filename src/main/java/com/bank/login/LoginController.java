@@ -52,23 +52,21 @@ public class LoginController {
 
 		dto.setM_pw(request.getParameter("pw"));
 		
-		//String userId= request.getParameter("usesId");
-		//String userPw= request.getParameter("usesPw");
-		// id/pw 보냈을때
-		// 이름 + count(*) 올려라
+	
 		LoginDTO result = loginService.login(dto);
-	//json.put("userId", request.getParameter("id"));
-	//json.put("userPw", request.getParameter("pw"));
+	
 		// 제이슨에서getparameter한거는 클라이언트에서 받아온거임 
 
 		System.out.println("로그인컨트롤러출력문"+result.getM_name());
 		System.out.println("로그인컨트롤러출력문"+result.getCount());
 		
-		//System.out.println("json.tostring" + json.toString());
+		
 		if (result.getCount() == 1) {
 			// 세션을 만들어서 로그인 지정 시간동안 유지 시킵니다.
 			
 			HttpSession session = request.getSession();
+			long cTime=session.getCreationTime();
+			long laTime=session.getLastAccessedTime();
 			
 			//세션타임아웃 구현하기위해 jsp로 보낼 모델구현 
 			int interval = 20;  //15초 설정
@@ -87,6 +85,7 @@ public class LoginController {
 			session.setAttribute("mname", result.getM_name());
 			session.setAttribute("mid", request.getParameter("id"));
 			session.setAttribute("mpw", request.getParameter("pw"));
+			
 			// session.setAttribute("result", 1);
 			//session.setAttribute("mpw", result.getM_pw());
 			// 세션 : 서버, 쿠키 : 클라이언트(브라우저)에 보관 됩니다.

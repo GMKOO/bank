@@ -1,6 +1,5 @@
 
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
@@ -45,36 +44,85 @@ $(function() {
 			url : "./checkID", 
 			type : "post",
 			dataType:"json", 
-		
+			async : false,
 			data : { "id" : id,
 				     "pw" : pw },
 		
 		
 			success: function(data) {
-				alert("왜안되." +data+data.result);
 				
 				if(data.result === 1) { 
-				alert("인증성공");
-				
-				}else { 
+			
+				$.ajax({
 					
-					alert("인증실패");
+					url : "./name", 
+					type : "get",
+					dataType:"json",
+					async : false,
+
+								
+				success: function(data) {
+				const name = data.mname;
+
+				alert(name+"님 어서오세요.");
+				
+				console.log("안녕");
+				console.log(data);
+				console.log(name);
+
+				}, 
+				
+				error: function(request,status,error) {
+					alert("서버 오류가 발생했습니다."+error);
+					
 				}
-	
-	
-			
-			
-			},
-			error: function(request,status,error) {
-				alert("서버 오류가 발생했습니다."+error);
-			}
+				});
+				} else { alert("아이디와 비밀번호가 틀렸습니다.");
+				  location.href = "./login";
+				}
+					
+				
+					
+					
+				},
+				error: function(request,status,error) {
+					alert("서버 오류가 발생했습니다."+error);
+				}
+			});
+
+				}); 
 		
 		});
-	});
-});
+
+/*	
+
+*/   
 		
 
 /*
+ * 
+ 
+	
+
+		 fetch('./name')  // 요청할 엔드포인트 URL을 지정
+		  .then(response => {
+		      return response.json()  // JSON 형식의 응답을 파싱
+		  		})
+		  .then(data => {
+		    // JSON 응답에서 데이터 추출 ("("+ rp +")");
+		    const mname = ""+data.mname+"";
+
+		    // 추출한 데이터 사용
+		    console.log("Received mname:", mname);
+		    console.log("data:", data);
+		    console.log("data.mname:", data.mname);
+		  })
+		  
+		  .catch(error => {
+		    console.error("Error fetching data:", error);
+		  });
+ */ 
+ /*
 		if( id.length < 5 ) { 	
 			alert(id.length);
 			alert("아이디가 잘못 입력되었습니다.");
@@ -293,6 +341,36 @@ function getSessionData() {
 	        input.value = value.replace(/[^\w\d]/g, "").replace(/\s/g, "");
 	        alert("특수문자와 공백은 입력할 수 없습니다.");
 	    }
+	/*    
+	  //세션시간 시분초로 정리  
+	    function calculateAndFormatDuration(startTimestamp, endTimestamp) {
+	        const durationInMillis = endTimestamp - startTimestamp;
+
+	        // 밀리초를 초로 변환
+	        const durationInSeconds = Math.floor(durationInMillis / 1000);
+
+	        // 초를 분으로 변환
+	        const durationInMinutes = Math.floor(durationInSeconds / 60);
+
+	        // 분을 시간으로 변환
+	        const durationInHours = Math.floor(durationInMinutes / 60);
+
+	        // 시, 분, 초를 계산
+	        const hours = durationInHours;
+	        const minutes = durationInMinutes % 60;
+	        const seconds = durationInSeconds % 60;
+
+	        // 시분초 형식으로 포맷팅하여 반환
+	        return `${hours}시간 ${minutes}분 ${seconds}초`;
+	    }
+
+	    const sessionStartTimestamp = 1691905003918;
+	    const sessionEndTimestamp = 1691905015095;
+
+	    const formattedDuration = calculateAndFormatDuration(sessionStartTimestamp, sessionEndTimestamp);
+	    console.log(formattedDuration);	 
+	 */   
+	    
 	}
 
 </script>
@@ -332,13 +410,13 @@ function getSessionData() {
 	<form name="loginForm" class="loginForm" action="./login" method="post">
 	
     <input type="text" minlength="4" maxlength="20" placeholder="아이디"  
-    required="required" name="id" class="loginID" id="id" onchange="" oninput="validateInput(this)" />
+    required="required" name="id" class="loginID" id="id" oninput="validateInput(this)" />
      
     <input type="password" name="pw" id="pw" class="loginPW" minlength="5" maxlength="12" 
     required="required" placeholder="********" oninput="validateInput(this)" />
 
     	<span>
-		<button class="login" type="submit" onclick="/login" onchange="">로그인</button>
+		<button class="login" type="submit" onclick="location.href='./login'"/>로그인</button>
 	</span>
 </form>
 

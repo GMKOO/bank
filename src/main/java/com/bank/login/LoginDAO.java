@@ -14,7 +14,7 @@ public class LoginDAO {
 		return sqlSession.selectOne("login.login",dto);
 	}
 
-	public int checkID(LoginDTO dto) {
+	public LoginDTO checkID(LoginDTO dto) {
 		
 		return sqlSession.selectOne("login.checkID", dto);
 	}

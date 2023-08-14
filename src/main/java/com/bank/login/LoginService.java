@@ -14,7 +14,7 @@ public class LoginService {
 		return loginDAO.login(dto);
 	}
 
-	public int checkID(LoginDTO dto) {
+	public LoginDTO checkID(LoginDTO dto) {
 		
 		return loginDAO.checkID(dto);
 	}

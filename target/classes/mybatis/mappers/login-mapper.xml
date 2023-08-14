@@ -15,9 +15,9 @@
 
 	</select>
 	
-	<select id="checkID"  parameterType="LoginDTO" resultType="Integer">
+	<select id="checkID"  parameterType="LoginDTO" resultType="LoginDTO">
 	
-	SELECT count(*) FROM member
+	SELECT m_name, count(*) AS 'count' FROM member
 	 WHERE m_id= #{m_id} AND m_pw= #{m_pw}
 	
 
