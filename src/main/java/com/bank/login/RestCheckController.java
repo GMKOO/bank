@@ -31,7 +31,7 @@ public class RestCheckController {
 			// 세션을 만들어서 로그인 지정 시간동안 유지 시킵니다.
 			
 			HttpSession session = request.getSession();
-			int interval = 20;  //15초 설정
+			int interval = 40;  //15초 설정
 		session.setMaxInactiveInterval(interval);  //세션종료시간설정 초단위 20초부여
 		session.setAttribute("mname", checkLogin.getM_name());
 	
@@ -86,6 +86,32 @@ public class RestCheckController {
 		System.out.println(json.toString());
 	
 		
+		return ResponseEntity.ok(json.toString());
+	}
+	
+	@PostMapping("/extendSession")
+	public ResponseEntity<String> extendSession(HttpServletRequest request) {
+		JSONObject json = new JSONObject();
+		HttpSession session = request.getSession();
+		
+		
+		if(session.getMaxInactiveInterval() != 0) {
+			
+		
+		   // 현재 시간과 세션 만료 시간 사이의 차이를 계산
+		long currentTimeMillis = System.currentTimeMillis();
+        long sessionExpirationMillis = session.getLastAccessedTime() + session.getMaxInactiveInterval() * 1000;
+        long remainingMillis = sessionExpirationMillis - currentTimeMillis;
+        
+     // 남은 시간을 초 단위로 계산
+        long remainingSeconds = remainingMillis / 1000;
+
+        json.put("remainingTime", remainingSeconds);
+        
+		}
+  
+         System.out.println("rest남은시간"+json.toString());
+        
 		return ResponseEntity.ok(json.toString());
 	}
 	

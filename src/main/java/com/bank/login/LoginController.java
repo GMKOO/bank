@@ -69,7 +69,7 @@ public class LoginController {
 			long laTime=session.getLastAccessedTime();
 			
 			//세션타임아웃 구현하기위해 jsp로 보낼 모델구현 
-			int interval = 20;  //15초 설정
+			int interval = 40;  //15초 설정
 			session.setMaxInactiveInterval(interval);  //세션종료시간설정 초단위 20초부여
 			
 			/*

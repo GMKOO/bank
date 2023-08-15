@@ -10,41 +10,23 @@ integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
 crossorigin="anonymous"></script>	
 
 
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <html>
 <head>
 <title>로그인</title>
 
 <script type="text/javascript">
+//모달사용하기위한링크 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+//모달사용하기위한스크립 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js">
 
-// 세션 연장 팝업 타이머 
-$(document).ready(function() {
-    // 시간이 경과한 후 팝업 띄우기
-    setTimeout(function() {
-        if (/* 조건이 달성되었을 경우 */) {
-            showPopup();
-        }
-    }, 5000); // 5000ms (5초) 경과 후 팝업 띄우기
-});
-
-
-
-
-
- // 리다이렉트를 처음에는 허용
-// var loginResult = 
-
-// timeout controller에서 인터벌타임을 세션에 담아서jsp로보내고 jsp에서 선언후 스크립트에서 사용 .
 //Jquery 
-
- // 스크립트 변수에 loginCount 값을 할당
- 
- 		
 		//contentType : "application/json",
 		
 $(function() {
 	$(".login").click(function() {
-		event.preventDefault(); // 기본 동작을 막음 폼 action 기능 새로고침을 막아준다.
+		event.preventDefault(); // 기본 동작을 막음. 폼 action 기능 새로고침을 막아준다.*중요*
 		let id = $("#id").val();
 		let pw = $("#pw").val();
 
@@ -59,7 +41,7 @@ $(function() {
 		
 		}else{
 		
-		$.ajax({
+		$.ajax({   // 1번 ajax 아이디 비밀번호 확인후 로그인창 숨기기 
 			
 			url : "./checkID", 
 			type : "post",
@@ -79,7 +61,7 @@ $(function() {
 			
 				
 			
-				$.ajax({
+				$.ajax({    //2번쨰 ajax 로그인시 name값  alert에 기재
 					
 					url : "./name", 
 					type : "post",
@@ -92,7 +74,7 @@ $(function() {
 
 				alert(name+"님 어서오세요.");
 				
-				$.ajax({
+				$.ajax({     //3번쨰 ajax 로그인시  로그인창 숨긴곳에 로그인 아이디가 보유중인 계좌 및 잔액 표시
 					
 					url : "./accountInfo", 
 					type : "post",
@@ -121,9 +103,69 @@ $(function() {
 			 '</form>';
                             $("body").append(accountHtml); // 계좌 정보 추가
 				
+                         
+                          	 // 세션 남은시간 모달을 띄우기 전에 남은 시간을 가져오는 Ajax 요청 보내기
+                              $.ajax({
+                                url: "./extendSession", 
+                                type: "post",
+                                dataType: "json",
+                                async : false,
+                                
+                                success: function(response) {
+                              	  
+                                  var remainTime = response.remainingTime;
+                                  console.log("성공시 남은시간"+remainTime)
+                                   $("#remainingTime").text(remainTime);  // 모달이랑남은시간이랑 간극으로 0초가 표시되고 남은시간이 표시되는거 잡는용
+                                   
+                                  var interval = setInterval(function() {  // 모달에 남은시간 표시할때 줄여나가는 기능
+                                      remainTime--;
+                                      
+                                      if (remainTime >= 0) {
+                                        $("#remainingTime").text(remainTime);
+                                        
+                                  if (remainTime === 30) {
+                                  	
+                                  $("#popupContent").dialog({
+                                      modal: true, // 모달 창으로 설정
+                                      width: 400,
+                                     
+                                  buttons: {
+                                      "로그인 연장": function() {
+                                        // 여기에 로그인 연장을 위한 Ajax 요청 처리 코드 추가
+                                        $(this).dialog("close");
+                                      },
+                                      "닫기": function() {
+                                        $(this).dialog("close");
+                                      }
+                                    }
+                                  });
+                                  }
+                                      } else {
+                                      	
+                                          clearInterval(interval); // 남은 시간이 마이너스면 카운트다운 중지
+                                          $("#popupContent").dialog("close");  //끌때는 상위 창을 꺼야됨. 시간만끄면안됨
+                                          $("#exitTime").text(0);
+                                          $("#exitContent").dialog({
+                                        	  
+                                              modal: true, // 모달 창으로 설정
+                                              width: 400,
+                                              buttons: { 
+                                            	  "닫기": function() {
+                                                  $(this).dialog("close");
+                                              } 
+                                          }
+                                        });
+                                       }  
+                                    }, 1000); //1초마다반복  setInterval(function) 지정한 시간마다 반복하는 기능
+                                },
+                                error: function() {
+                                  console.log("세션 연장 실패");
+                                }
+                              }); // 팝업 ajax 끝단
+                             
+				},// accountinfo 성공 ajax 끝
 
-				},
-				
+			
 				error: function(request,status,error) {
 					alert("서버 오류가 발생했습니다."+error);
 					
@@ -157,7 +199,72 @@ $(function() {
 		});
 
 
-/*	
+/*	타이머 모달
+
+$(document).ready(function() {
+	  // 일정 시간이 경과하면 팝업을 띄움
+	   setTimeout(function() {
+	 // 세션 남은시간 모달을 띄우기 전에 남은 시간을 가져오는 Ajax 요청 보내기
+    $.ajax({
+      url: "./extendSession", 
+      type: "post",
+      dataType: "json",
+      
+      success: function(response) {
+    	  
+        var remainTime = response.remainingTime;
+        
+         $("#remainingTime").text(remainTime);  // 모달이랑남은시간이랑 간극으로 0초가 표시되고 남은시간이 표시되는거 잡는용
+         
+        var interval = setInterval(function() {  // 모달에 남은시간 표시할때 줄여나가는 기능
+            remainTime--;
+            
+            if (remainTime >= 0) {
+              $("#remainingTime").text(remainTime);
+              
+            } else {
+            	
+              clearInterval(interval); // 남은 시간이 마이너스면 카운트다운 중지
+              $("#popupContent").dialog("close");  //끌때는 상위 창을 꺼야됨. 시간만끄면안됨
+              $("#exitTime").text(0);
+              $("#exitContent").dialog({
+            	  
+                  modal: true, // 모달 창으로 설정
+                  width: 400,
+                  buttons: { 
+                	  "닫기": function() {
+                      $(this).dialog("close");
+                  } 
+              }
+            });
+           }  
+        }, 1000); //1초마다반복  setInterval(function) 지정한 시간마다 반복하는 기능
+        
+ 
+        
+        $("#popupContent").dialog({
+            modal: true, // 모달 창으로 설정
+            width: 400,
+           
+        buttons: {
+            "로그인 연장": function() {
+              // 여기에 로그인 연장을 위한 Ajax 요청 처리 코드 추가
+              $(this).dialog("close");
+            },
+            "닫기": function() {
+              $(this).dialog("close");
+            }
+          }
+        });
+      },
+      error: function() {
+        console.log("세션 연장 실패");
+      }
+    });
+   
+  }, 10000); // 10초 후에 팝업 띄움
+ 
+});
 
 */   
 		
@@ -391,49 +498,34 @@ function getSessionData() {
 	        alert("특수문자와 공백은 입력할 수 없습니다.");
 	    }
 	}
-	/*    
-	  //세션시간 시분초로 정리  
-	    function calculateAndFormatDuration(startTimestamp, endTimestamp) {
-	        const durationInMillis = endTimestamp - startTimestamp;
-
-	        // 밀리초를 초로 변환
-	        const durationInSeconds = Math.floor(durationInMillis / 1000);
-
-	        // 초를 분으로 변환
-	        const durationInMinutes = Math.floor(durationInSeconds / 60);
-
-	        // 분을 시간으로 변환
-	        const durationInHours = Math.floor(durationInMinutes / 60);
-
-	        // 시, 분, 초를 계산
-	        const hours = durationInHours;
-	        const minutes = durationInMinutes % 60;
-	        const seconds = durationInSeconds % 60;
-
-	        // 시분초 형식으로 포맷팅하여 반환
-	        return `${hours}시간 ${minutes}분 ${seconds}초`;
-	    }
-
-	    const sessionStartTimestamp = 1691905003918;
-	    const sessionEndTimestamp = 1691905015095;
-
-	    const formattedDuration = calculateAndFormatDuration(sessionStartTimestamp, sessionEndTimestamp);
-	    console.log(formattedDuration);	 
-	 */   
+	
 	    
 	
 
 </script>
 </head>
 
+<div id="popupContent" style="display: none;">
+  <p>로그인을 지속하실려면 연장버튼을 클릭해주세요.</p>
+  <p>남은 시간: <span id="remainingTime">0</span>초</p>
+  <button id="extendSession1">로그인 연장</button>
+</div>
+
+
+<div id="exitContent" style="display: none;">
+  <p> 안내 </p>
+  <p>장시간 이용하시지 않아 안전한 금융거래보호를 위해 로그아웃 되었습니다.</p>
+  <p>남은 시간: <span id="exitTime">0</span>초</p>
+ 
+</div>
+
 		
 	
 
+
+
 		
-		<div id="autoLogoutPopup" style="display: none;">
-    <!-- 팝업 내용 -->
-    <p>팝업창</p>
-</div>
+
 
 <nav>
  <c:choose>
