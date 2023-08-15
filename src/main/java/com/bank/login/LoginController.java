@@ -42,6 +42,11 @@ public class LoginController {
 		return "join";
 	}
 	
+	@GetMapping("/warning")
+	public String warning() {
+		return "warning";
+	}
+	
 	@PostMapping("/login")
 	public String login(HttpServletRequest request) {
 

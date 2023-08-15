@@ -23,18 +23,21 @@ public class RestCheckController {
 		LoginDTO dto = new LoginDTO();
 		dto.setM_id(id);
 		dto.setM_pw(pw);
-		
+		int interval = 40; 
 		LoginDTO checkLogin = loginService.checkID(dto);
 		json.put("result", checkLogin.getCount());
+		json.put("interval",interval);
 		
 		if (checkLogin.getCount() == 1) {
 			// 세션을 만들어서 로그인 지정 시간동안 유지 시킵니다.
 			
 			HttpSession session = request.getSession();
-			int interval = 40;  //15초 설정
+			 //15초 설정
 		session.setMaxInactiveInterval(interval);  //세션종료시간설정 초단위 20초부여
 		session.setAttribute("mname", checkLogin.getM_name());
-	
+		session.setAttribute("id", dto.getM_id());
+		
+		
 		System.out.println("REST컨트롤러출력문"+checkLogin.getM_name());	
 	
 		
@@ -112,6 +115,33 @@ public class RestCheckController {
   
          System.out.println("rest남은시간"+json.toString());
         
+		return ResponseEntity.ok(json.toString());
+	}
+	
+	@PostMapping("/sessionextend")
+	public ResponseEntity<String> sessionextend(HttpServletRequest request ) {
+		JSONObject json = new JSONObject();
+	
+		int interval = 40; 
+		json.put("interval",interval);
+		System.out.println("interval추가문"+json.toString());	
+	
+		return ResponseEntity.ok(json.toString());
+		
+		} 
+	
+	@PostMapping("/checkLoginStatus")
+	public ResponseEntity<String> checkLoginStatus(HttpServletRequest request) {
+		JSONObject json = new JSONObject();
+		HttpSession session = request.getSession();
+	
+		String result = (String) session.getAttribute("id");
+		json.put("session",result );
+		
+		
+		System.out.println("새로고침시session값확인"+json.toString());
+		
+		
 		return ResponseEntity.ok(json.toString());
 	}
 	
