@@ -90,6 +90,9 @@ public class LoginController {
 			session.setAttribute("mname", result.getM_name());
 			session.setAttribute("mid", request.getParameter("id"));
 			session.setAttribute("mpw", request.getParameter("pw"));
+			session.setAttribute("count", result.getCount());
+			
+			System.out.println("세션 카운트"+"count");
 			
 			// session.setAttribute("result", 1);
 			//session.setAttribute("mpw", result.getM_pw());

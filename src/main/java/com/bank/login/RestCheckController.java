@@ -35,7 +35,14 @@ public class RestCheckController {
 			 //15초 설정
 		session.setMaxInactiveInterval(interval);  //세션종료시간설정 초단위 20초부여
 		session.setAttribute("mname", checkLogin.getM_name());
-		session.setAttribute("id", dto.getM_id());
+		session.setAttribute("id",id);
+		session.setAttribute("count", checkLogin.getCount());
+		
+	System.out.println("세션id출력"+dto.getM_id());
+	System.out.println("세션id출력1" + id);
+		//System.out.println("세션카운트출력"+checkLogin.getCount());
+		//System.out.println("세션카운트출력"+session.getAttribute("count")); 1출력함
+		
 		
 		
 		System.out.println("REST컨트롤러출력문"+checkLogin.getM_name());	

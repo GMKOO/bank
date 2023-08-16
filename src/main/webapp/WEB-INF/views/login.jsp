@@ -19,6 +19,8 @@
 String strReferer = request.getHeader("referer"); //이전 URL 가져오기  //# url 직접입력 막기#
 if(strReferer == null){ 
 %> 
+
+
 <script language="javascript">
 alert("URL을 직접 입력해서 접근하셨습니다.\n정상적인 경로를 통해 다시 접근해 주세요.");
 document.location.href="warning"; </script> 
@@ -27,23 +29,46 @@ return;
 } 
 %>
 
+
 <html>
 <head>
 <title>로그인</title>
 
+
 <script type="text/javascript">
+//int count =Integer.parseInt(String.valueOf(result.get("count")));
 	//모달사용하기위한링크 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	//모달사용하기위한스크립 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js">
 
 	//Jquery 
 	
   	//## 페이지 새로고침 이벤트가 발생할 때 실행할 코드
-  	
-	$(window).on('beforeunload', function() {
-  
-    
-    reload(id); // #6. 로그인후 페이지 새로 고치면 로그인화면 그대로 보여주기 
-});
+
+	
+		document.addEventListener('DOMContentLoaded', function () {
+			//세션에 저장된 count를 storage에 저장
+			sessionStorage.setItem("reloadData", <%=session.getAttribute("count")%> );
+			sessionStorage.setItem("reloadID",  <%=session.getAttribute("id")%> );
+			
+			
+			const id = sessionStorage.getItem("reloadID"); 
+			//storage에 저장된 숫자를 countStorage 저장
+			const countStorage = sessionStorage.getItem("reloadData");  // 
+			
+		console.log(id);
+		 console.log(countStorage);
+			
+		 if (countStorage != null && id != null ) {
+			 
+			 
+			    //reload(id); // #6. 로그인후 페이지 새로 고치면 로그인화면 그대로 보여주기 
+				   accountInfo(id);   // 계좌 정보 함수 호출
+				   extendSession(); // 세션 연장 함수 호출
+			 
+		 }
+		   });
+		  
+
 	
 
 	//#1.아이디 비밀번호 확인후 로그인창 숨기기 
@@ -238,6 +263,7 @@ return;
 		 //#6.페이지 새로고침시 로그인상태 화면 유지용
 	function reload (id) { 
 		$(document).ready(function() {
+			event.preventDefault(); // 기본 동작을 막음. 폼 action 기능 새로고침을 막아준다.*중요*
 			
 	$.ajax({
 	    url: "./checkLoginStatus", // 서버에서 로그인 상태 확인하는 URL로 변경
