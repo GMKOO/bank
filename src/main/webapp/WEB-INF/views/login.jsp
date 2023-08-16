@@ -44,11 +44,11 @@ return;
 	
   	//## 페이지 새로고침 이벤트가 발생할 때 실행할 코드
 
-	
+
 		document.addEventListener('DOMContentLoaded', function () {
 			//세션에 저장된 count를 storage에 저장
 			sessionStorage.setItem("reloadData", <%=session.getAttribute("count")%> );
-			sessionStorage.setItem("reloadID",  <%=session.getAttribute("id")%> );
+			sessionStorage.setItem("reloadID",  "<%=session.getAttribute("id")%>" );
 			
 			
 			const id = sessionStorage.getItem("reloadID"); 
@@ -60,14 +60,14 @@ return;
 			
 		 if (countStorage != null && id != null ) {
 			 
-			 
-			    //reload(id); // #6. 로그인후 페이지 새로 고치면 로그인화면 그대로 보여주기 
-				   accountInfo(id);   // 계좌 정보 함수 호출
-				   extendSession(); // 세션 연장 함수 호출
+			 $(".loginForm").hide(); 
+			    reload(id); // #6. 로그인후 페이지 새로 고치면 로그인화면 그대로 보여주기 
+				   //accountInfo(id);   // 계좌 정보 함수 호출
+				   //extendSession(); // 세션 연장 함수 호출
 			 
 		 }
 		   });
-		  
+		
 
 	
 
