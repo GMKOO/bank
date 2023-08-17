@@ -51,14 +51,13 @@ return;
 			sessionStorage.setItem("reloadID",  "<%=session.getAttribute("id")%>" );
 			
 			
-			const id = sessionStorage.getItem("reloadID"); 
+			const id = sessionStorage.getItem("reloadID"); 	
 			//storage에 저장된 숫자를 countStorage 저장
 			const countStorage = sessionStorage.getItem("reloadData");  // 
 			
-		console.log(id);
-		 console.log(countStorage);
+
 			
-		 if (countStorage != null && id != null ) {
+		 if (countStorage == 1 && id != null ) {
 			 
 			 $(".loginForm").hide(); 
 			    reload(id); // #6. 로그인후 페이지 새로 고치면 로그인화면 그대로 보여주기 
@@ -226,7 +225,10 @@ return;
 								}
 							}
 						});
-						location.reload();
+						setTimeout(function() {
+						    location.reload();
+						}, 2000); // 
+					
 					}
 				}, 1000); //1초마다반복  setInterval(function) 지정한 시간마다 반복하는 기능
 			},
@@ -263,7 +265,7 @@ return;
 		 //#6.페이지 새로고침시 로그인상태 화면 유지용
 	function reload (id) { 
 		$(document).ready(function() {
-			event.preventDefault(); // 기본 동작을 막음. 폼 action 기능 새로고침을 막아준다.*중요*
+			//event.preventDefault(); // 기본 동작을 막음. 폼 action 기능 새로고침을 막아준다.*중요*
 			
 	$.ajax({
 	    url: "./checkLoginStatus", // 서버에서 로그인 상태 확인하는 URL로 변경
@@ -276,10 +278,7 @@ return;
 	          $(".loginForm").hide(); 
 	        	 accountInfo(id);  //#3. 로그인성공시 계좌 및 잔액 보여주기 
 				extendSession();  //#4. 세션 종료전 팝업 및 남은시간 보여주고,로그인 연장 버튼
-	          } else {
-	        	  
-	        	  alert("세션없데");
-	          }
+	          } 
 	         },
 	         error : function(request, status, error) {
 					alert("서버 오류가 발생했습니다." + error);
@@ -862,7 +861,7 @@ return;
 			</button>
 		</span>
 		<div class=loginOption>
-			<a class="join" href="회원가입주소">e농협 회원가입</a> <a class="serchID"
+			<a class="join" href="/web/join">e농협 회원가입</a> <a class="serchID"
 				href="ID찾기주소">ID찾기</a> <a class="resetPW" href="비밀번호찾기주소">비밀번호초기화(재설정)</a>
 		</div>
 
