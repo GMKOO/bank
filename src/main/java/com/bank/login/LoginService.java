@@ -3,6 +3,8 @@ package com.bank.login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bank.join.JoinDTO;
+
 @Service
 public class LoginService {
 
@@ -24,6 +26,16 @@ public class LoginService {
 	public LoginDTO accountInfo(LoginDTO dto) {
 		
 		return loginDAO.accountInfo(dto);
+	}
+
+	public int joincheckID(String id) {
+		
+		return loginDAO.joincheckID(id);
+	}
+
+	public int joinCreateID(JoinDTO dto) {
+		
+		return loginDAO.joinCreateID(dto);
 	}
 
 	

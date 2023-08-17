@@ -2,7 +2,10 @@ package com.bank.login;
 
 
 public class LoginDTO {
+
+
 	private int m_no,m_grade,count ;
+	private String m_id,m_pw,m_name,m_addr,m_personal_id_number,m_phone,m_gender,m_email,m_joindate,a_account_number;
 	private long a_balance;
 	public long getA_balance() {
 		return a_balance;
@@ -22,8 +25,7 @@ public class LoginDTO {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	private String m_name,m_personal_id_number,m_gender,m_phone,m_id,m_pw,m_email,m_addr,m_joindate
-	,a_account_number;  
+
 	
 	public int getM_no() {
 		return m_no;

@@ -6,7 +6,7 @@
 	<typeAliases>
 
 			<typeAlias type="com.bank.login.LoginDTO" alias="loginDTO"/>
-	
+			<typeAlias type="com.bank.join.JoinDTO" alias="JoinDTO"/>
 	
 	</typeAliases>
 </configuration>
