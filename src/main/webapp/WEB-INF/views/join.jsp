@@ -18,6 +18,33 @@
 
 <script type="text/javascript">
 
+//제출시 완성된한글 인지 아닌지 검사 
+function validateKoreanck(input) {
+	
+	var value =$("#koreanInput").val();
+			
+		    	
+		     
+		        var newValue = value.replace(/[^a-zA-Z가-힣]/g, "");
+		        
+		        
+		        
+		        if (/^[가-힣]*$/.test(newValue) ) {
+		            // 입력된 문자열이 완성된 한글 또는 영어인 경우
+		            
+		        	  return true;
+		          
+		        } else {
+		            // 다른 문자가 입력된 경우
+		            alert("이름과 주소는 올바른 한글만 입력할수 있습니다.");
+		            newValue = ""; // 입력된 값을 비웁니다.
+		        
+		           return false;
+		        }
+		        
+		     
+		        }
+
 //이름 제출시 완성된 한글 인지검사
 function validateAndSubmit() {
     var input = document.getElementById("koreanInput");
@@ -58,7 +85,8 @@ function preventWhitespace(input) {
 function validateInput(input) {
 	var value = input.value;
 	if (/[^\w\d]/.test(value) || /\s/.test(value)) {
-		input.value = value.replace(/[^\w\d]/g, "").replace(/\s/g, "");
+		var newValue = value.replace(/[^\w\d]/g, "").replace(/\s/g, "");
+		 input.value = newValue; // 입력값을 다시 원래상태로 되돌리기 
 		alert("특수문자와 공백은 입력할 수 없습니다.");
 	}
 }
@@ -81,13 +109,29 @@ function validateInput(input) {
 	    }
 	}
 	
+	//
+	function validateKoreanEnglish1(input) {
+	 var value = input.value;
+    if (/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(value)) {
+        // 한글과 영어, 한글 자소가 아닌 문자가 입력되었을 때
+        var newValue = value.replace(/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/g, "");
+        input.value = newValue; // 입력 요소의 값을 변경
+        alert("한글과 영어, 한글 자소만 입력할 수 있습니다.");
+   
+    }
+
+	}
+	
 	//한글과 영어만 허용 
 	function validateKoreanEnglish(input) {
-	    var value = input.value;
-	    if (!/^[a-zA-Zㄱ-힣]+$/.test(value)) {
-	        input.value = value.replace(/[^\sa-zA-Zㄱ-힣]/g, "");
+		var value = input.value;
+	    if (/[^a-zA-Z가-힣]/.test(value)) {
+	        // 한글과 영어가 아닌 문자가 입력되었을 때
+	        var newValue = value.replace(/[^a-zA-Z가-힣]/g, "");
+	        input.value = newValue; // 입력 요소의 값을 변경
 	        alert("한글과 영어만 입력할 수 있습니다.");
 	    }
+	 
 	}
 // 숫자랑 아이디만 허용 
 	function validateAlphanumeric(input) {
@@ -155,8 +199,9 @@ function validateInput(input) {
 	// 비밀번호 일치함수
 	function joinpwck() {
 		let pw = $(".joinPw").val();
+		let id = $("#id").val();
 		let pwck = $(".joinPwck").val();
-		let name = $("#name").val();
+		let name = $("#koreanInput").val();
 		let addr = $("#addr").val();
 		let birth = $("#birth").val();
 		let birth2 = $("#birth2").val();
@@ -174,33 +219,60 @@ function validateInput(input) {
 			alert("비밀번호가 일치 하지 않습니다.");
 			$(".joinckMSG").css("color","red").css("font-weight","bold").css("font-size","15pt");
 			return false;
+		}else if(pw == pwck) {
+			$(".joinckMSG").text("비밀번호가 일치 합니다.");
+	
+		$(".joinckMSG").css("color","green").css("font-weight","bold").css("font-size","15pt");
+			
 		}
-		if(addr ==null || addr == "") {
+		
+		
+		if(pw.length < 5) {
+			
+		
+			$(".joinPwck").focus();
+			$(".joinckMSG").text("비밀번호 길이를 확인해주세요.");
+			alert("비밀번호 길이를 확인해주세요.");
+			$(".joinckMSG").css("color","red").css("font-weight","bold").css("font-size","15pt");
+			return false;
+			
+		
+		}
+		
+		
+		if(addr.length < 6 ) {
 			
 			$("#addr").focus();
+			
 			
 			alert("주소를 정확히 입력해주세요");
 			
 			return false;
 		}
-		if(birth ==null || birth.length <6) {
+		
+		
+		
+		
+		if( birth.length <6 ) {
 			$("#birth").focus();
 			alert("주민등록번호 앞자리를 정확하게 입력해주세요");
 			return false;
 		}
-		if(birth2 ==null || birth2.length <7) {   //주민번호도 있으면 가입불가로해야되
+		if(birth2.length <7 ) {   //주민번호도 있으면 가입불가로해야되
 			$("#birth2").focus();
 			alert("주민등록번호 뒷자리를 정확하게 입력해주세요");
 			return false;
 		}
-		if(phonenum ==null || phonenum.length <9) {
+		
+		if( phonenum.length < 9) {
 			$("#phonenum").focus();
 			alert("전화번호를 정확하게 입력해주세요");
 			return false;
 		}
-		if(id ==null ) {  //db에서아이디 같은지 다시확인?
+		
+		if( id.length < 2 ) {  //db에서아이디 같은지 다시확인?
 			$("#id").focus();
-			alert("id 중복된 가입입니다");
+			alert("id를 정확하게 입력해주세요.");
 			return false;
 		}
 		
@@ -213,12 +285,14 @@ function validateInput(input) {
 			dataType : "json", // {result : 0}
 			data : formData,
 			success : function(data) {
-			
-			
-			if(data.result==1) {
+				console.log(data);
+				console.log(data.result);
 				
-				console("성공적");
-			}
+			
+			//if(data.result==1) {
+				//alert("data.result"+data.result);
+				//console.log("성공적");
+			
 			
 			},
 			
@@ -230,10 +304,21 @@ function validateInput(input) {
 	
 		}); //  ajax 시작 선언
 		
-		
-		alert("회원가입성공");
+		if(validateKoreanck()) {
+			
+			alert("회원가입성공");
+			return true;
+			
+		}else {
+			alert("회원가입 다시 진행해주세요");
+			return false;
+			
+		}
+	
 		return true;
 		
+	
+
 	}
 
 
@@ -262,30 +347,31 @@ function validateInput(input) {
 		<div>
 			<input class="joinPwck"  required="required" name="pw2" type="password" placeholder="비밀번호확인"
 				required="required" maxlength="20" oninput="preventWhitespace(this)"/>
-				<P><span id="joinckMSG"></span></p>
+				
+				<P><span class="joinckMSG" id="joinckMSG"></span></p>
 		</div>
 		<div>
 			<input class="joinName" id="koreanInput" required="required" name="name" type="text" placeholder="이름"
-				required="required" maxlength="20" oninput="validateKoreanEnglish(this)"/>
+				required="required" maxlength="20" oninput="validateKoreanEnglish1(this)"/>
 		</div>
 		<div>
-			<input class="joinAddress" required="required" name="addr" type="text" placeholder="주소"
-				required="required" maxlength="20" oninput="validateKoreanEnglish(this)"/>
+			<input class="joinAddress" required="required" id="addr" name="addr" type="text" placeholder="주소"
+				required="required" maxlength="20" oninput="validateKoreanEnglish1(this)"/>
 		</div>
 		<div>
-			<input class="joinphonenum" required="required" name="phonenum" type="text" placeholder="전화번호 -입력하지마세요"
+			<input class="joinphonenum" required="required" name="phonenum" id="phonenum" type="text" placeholder="전화번호 -입력하지마세요"
 				required="required" maxlength="14" oninput="validateNumbers2(this)"/>
 		</div>
 
 
 		<div>
-			<input name="birth" required="required" class="joinNum" type="text"  oninput="validateNumbers2(this)" placeholder="주민등록번호 앞자리" maxlength="6" minlength="6"/>
-			<input name="birth2" required="required" class="joinNum" type="password"  oninput="validateNumbers2(this)" placeholder="주민등록번호 뒷자리" maxlength="7" minlength="7"/>
+			<input name="birth" id="birth" required="required" class="joinNum" type="text"  oninput="validateNumbers2(this)" placeholder="주민등록번호 앞자리" maxlength="6" minlength="6"/>
+			<input name="birth2" id="birth2" required="required" class="joinNum" type="password"  oninput="validateNumbers2(this)" placeholder="주민등록번호 뒷자리" maxlength="7" minlength="7"/>
 		</div>
 
 		<div class="button1">
-			<button type="submit" class="login" onclick="joinpwck()">가입하기</button>
-			<button type="reset" class="login" onclick="">취소</button>
+			<button type="button" class="login" onclick="joinpwck()">가입하기</button>
+			<button type="reset" class="login" >취소</button>
 		</div>
 		</div>
 	 </form>
