@@ -1,10 +1,7 @@
 package com.bank.login;
 
-import javax.naming.InsufficientResourcesException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bank.join.JoinDTO;
 
@@ -12,8 +9,7 @@ import com.bank.join.JoinDTO;
 public class LoginService {
 	
 	
-	 @Autowired
-	    private AccountRepository accountRepository;
+	
 	@Autowired
 	private LoginDAO loginDAO;
 	
@@ -48,25 +44,6 @@ public class LoginService {
 		return loginDAO.serchck(dto);
 	}
 
-	public void transferMoney(LoginDTO dto) {
-		
-	}
-	
-	@Transactional
-    public void transferMoney(String fromAccountNumber, String toAccountNumber, long amount) {
-        Account fromAccount = accountRepository.findByAccountNumber(fromAccountNumber);
-        Account toAccount = accountRepository.findByAccountNumber(toAccountNumber);
-
-        if (fromAccount.getBalance() >= amount) {
-            fromAccount.setBalance(fromAccount.getBalance() - amount);
-            toAccount.setBalance(toAccount.getBalance() + amount);
-
-            accountRepository.save(fromAccount);
-            accountRepository.save(toAccount);
-        } else {
-           
-        }
-    }
 
 	
 	

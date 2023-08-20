@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -154,7 +153,7 @@ public class RestCheckController {
 	}
 	
 
-	
+	/*
 	@PostMapping("/transfer")
     public ResponseEntity<String> transferMoney(
             @RequestParam("fromAccountNumber") String fromAccountNumber,
@@ -167,13 +166,14 @@ public class RestCheckController {
 		dto.setA_account_number(fromAccountNumber);
 		dto.setT_amount(amount);
 		dto.setT_others_account_number(toAccountNumber);
-        try {
+       
          loginService.transferMoney(dto);
-            return ResponseEntity.ok("Money transfer successful.");
-        } catch (Exception e) {
-        	json.put("error","Money transfer failed : " + e.getMessage());
-        	 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json.toString());
+        // try {
+        return ResponseEntity.ok("Money transfer successful.");
+        //} catch (Exception e) {
+        //	json.put("error","Money transfer failed : " + e.getMessage());
+        	// return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json.toString());
         }
-    }
+    */
 	
 }
