@@ -42,14 +42,22 @@
 	
 
 
-	<insert id="joinCreateID" parameterType="JoinDTO" >
+	<insert id="joinCreateID" parameterType="JoinDTO">
 	
 	INSERT INTO member (m_id,m_pw,m_name,m_addr,m_personal_id_number,m_phone)
 	VALUES(#{id},#{pw1},#{name},#{addr},CONCAT(#{birth},'-',#{birth2}),#{phonenum})
 	
 	</insert>
 	
+	<select id="serchck" parameterType="JoinDTO" resultType="String">
 	
+	SELECT m_id 
+	FROM member 
+	WHERE m_name =#{name} 
+	AND m_personal_id_number = CONCAT(#{birth},'-',#{birth2})
+	
+	
+	</select>
 
 
 	</mapper>

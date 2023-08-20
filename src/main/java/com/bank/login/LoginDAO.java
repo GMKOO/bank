@@ -31,9 +31,13 @@ public class LoginDAO {
 		return sqlSession.selectOne("login.joincheckID", id);
 	}
 
-	public int joinCreateID(JoinDTO dto) {
+	public Boolean joinCreateID(JoinDTO dto) {
 		
 		return sqlSession.selectOne("login.joinCreateID",dto);
+	}
+
+	public String serchck(JoinDTO dto) {
+		return sqlSession.selectOne("login.serchck", dto);
 	}
 
 }

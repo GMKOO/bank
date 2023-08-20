@@ -127,7 +127,26 @@ return;
 			}
 		});
 	}
+	
+	// 숫자를 문자로 바꾸고 ,와 원을 추가하는 함수
+	
 
+	function formatNumber(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+	}
+
+	
+	// 4글자마다 -넣는 계좌표시하는 함수
+	function formatAccountNumber(account) {
+    var formatted = "";
+    for (var i = 0; i < account.length; i++) {
+        if (i > 0 && i % 4 === 0) {
+            formatted += "-";
+        }
+        formatted += account[i];
+    }
+    return formatted;
+}
 	//#3.로그인후 계좌정보표시
 	function accountInfo(id) {
 		
@@ -145,16 +164,17 @@ return;
 						const account = data.account;
 						const balance = data.balance;
 						//alert("계좌는"+account +"잔액은"+balance)
-						
+						var formattedAccount = formatAccountNumber(account);
+						var formattedBalance = formatNumber(balance);
 
 						var accountHtml =
 
 						'<form class="accountInfo" action="./login" method="post">'
 								+ '<div class="accountInfo">'
 								+ '계좌번호: '
-								+ account
+								+ formattedAccount
 								+ '잔액: '
-								+ balance
+								+ formattedBalance
 								+ '</div>'
 								+ '<span>'
 								+ '<button class="serch" type="submit" onclick=""/>조회</button>'
@@ -168,8 +188,9 @@ return;
 					}
 				});
 	}
-
-	// #4.세션 팝업 및 남은시간 및 로그인연장버튼
+	
+	
+	// #4.세션 팝업 및 남은시간 및 로그인연장버튼  (세션시간은 checkid에서 조절)
 	function extendSession() {
 		$.ajax({
 			url : "./extendSession",
@@ -251,6 +272,7 @@ return;
 				var extendedTime = response.interval; // 서버에서 넘겨준 세션 초기부여시간
 
 				remainTime = extendedTime; // 기존 남은시간을 세션 초기부여시간으로 교체
+				console.log(remainTime);
 			},
 
 			error : function(request, status, error) {
@@ -797,6 +819,152 @@ return;
 			alert("특수문자와 공백은 입력할 수 없습니다.");
 		}
 	}
+	 
+	 // 아이디 찾기
+	 function serchid() {
+			
+			
+			$.ajax({
+				
+				url : "./serchid", //
+				type : "post",
+				dataType : "json", // {result : 0}
+			
+				success : function(data) {   
+					 $(".loginForm").hide(); 
+					 
+					 var serchid = 
+					 '<form class="serchid" action="./login" method="post">'
+						+ '<div class="serchid">'
+						+ '이름: '
+						+ '<div><input id="koreanInput" name="name" type="text"'
+						+'placeholder="이름" required="required" maxlength="20"'
+						+'oninput="validateKoreanEnglish1(this)"/></div>'
+						+ '주민등록번호: '
+						+ '<div><input name="birth" id="birth" required="required"' 
+						+'class="joinNum" type="text" oninput="validateNumbers2(this)"' 
+						+'placeholder="주민등록번호 앞자리" maxlength="6" minlength="6"/>'
+						+'<input name="birth2" id="birth2" required="required" class="joinNum"'
+						+'type="password" oninput="validateNumbers2(this)" placeholder="주민등록번호 뒷자리"'
+						+'maxlength="7" minlength="7"/></div>'
+						+ '</div>'
+						+ '<span>'
+						+ '<button class="serch" type="submit" onclick="serchck()"/>조회</button>'
+						+ '<button class="reset" type="reset" onclick="moveToLogin()"/>닫기</button>'
+						+ '</span>' + '</form>';
+				$("body").append(serchid); // 조회창 구현 
+				
+			
+				
+				},
+				
+				error: function(request,status,error){
+					$("#resultMSG").text("오류가 발생 했습니다. 가입할 수 없습니다.");
+					
+					return false;
+				}
+		
+			
+		});
+		}
+	
+	 function moveToLogin() {
+		    location.href = './login'; // 페이지 이동
+		}
+	 
+	 //회원가입 제출시 이름과 주민번호 재검증
+	 //추가로 주민등록 동일한게있으면 가입안되는거 구현해야됨
+		function serchck() { 
+			
+			 var name = $("#koreanInput").val();
+			    var birth = $("#birth").val();
+			    var birth2 = $("#birth2").val();
+
+			    if(name.length < 2 ) {
+					
+					$("#name").focus();
+					
+					
+					alert("이름을 정확히 입력해주세요");
+					return false;
+			    }
+			    
+			    if( birth.length <6 ) {
+					$("#birth").focus();
+					alert("주민등록번호 앞자리를 정확하게 입력해주세요");
+					return false;
+				}
+				if(birth2.length <7 ) {   //주민번호도 있으면 가입불가로해야되
+					$("#birth2").focus();
+					alert("주민등록번호 뒷자리를 정확하게 입력해주세요");
+					return false;
+				}
+			    
+			    
+		
+				$.ajax({
+					
+					url : "./serchck", //
+					type : "post",
+					dataType : "json", // {result : 0}
+					data : {"name": name, 
+							"birth":birth,
+							"birth2":birth2
+							
+					},
+				
+					success : function(data) {   
+						
+						
+					
+						if(data === null || typeof data.id === "undefined"){
+							
+							alert("등록되지않은 회원 입니다.");
+						
+						} else {
+					
+						 alert("아이디는"+data.id);
+						}
+						
+					//if(data.result==1) {
+						//alert("data.result"+data.result);
+				
+					
+					
+					},
+					
+					error: function(request,status,error){
+						$("#resultMSG").text("오류가 발생 했습니다. 가입할 수 없습니다.");
+						
+						return false;
+					}
+			
+				
+			});
+				}
+				
+				function validateKoreanEnglish1(input) {
+					 var value = input.value;
+				    if (/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(value)) {
+				        // 한글과 영어, 한글 자소가 아닌 문자가 입력되었을 때
+				        var newValue = value.replace(/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/g, "");
+				        input.value = newValue; // 입력 요소의 값을 변경
+				        alert("한글과 영어만 입력할 수 있습니다.");
+				   
+				    }
+
+					}
+				
+				
+				//숫자만허용됨
+				function validateNumbers2(input) {
+				    var value = input.value;
+				    if (!/^\d+$/.test(value)) {
+				        input.value = value.replace(/[^\d]/g, "");
+				        alert("숫자만 입력할 수 있습니다.");
+				    }
+				}
+				
 </script>
 </head>
 
@@ -861,8 +1029,9 @@ return;
 			</button>
 		</span>
 		<div class=loginOption>
-			<a class="join" href="/web/join">e농협 회원가입</a> <a class="serchID"
-				href="ID찾기주소">ID찾기</a> <a class="resetPW" href="비밀번호찾기주소">비밀번호초기화(재설정)</a>
+			<a class="join" href="/web/join">e농협 회원가입</a> 
+			<button class="serchID" type="button" onclick="serchid()" oninput="serchid()">ID찾기</button> 
+			<a class="resetPW" href="비밀번호찾기주소">비밀번호초기화(재설정)</a>
 		</div>
 
 	</form>

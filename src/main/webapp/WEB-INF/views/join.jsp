@@ -18,26 +18,24 @@
 
 <script type="text/javascript">
 
+
+
 //제출시 완성된한글 인지 아닌지 검사 
-function validateKoreanck(input) {
+function validateKoreanck(inputValue,elementID) {  //재사용하기위해서 내용,입력아이디 지정
 	
-	var value =$("#koreanInput").val();
-			
-		    	
-		     
-		        var newValue = value.replace(/[^a-zA-Z가-힣]/g, "");
-		        
-		        
-		        
-		        if (/^[가-힣]*$/.test(newValue) ) {
+
+		  
+		
+		        if (/^[가-힣a-zA-Z0-9]*$/.test(inputValue)) {  //한글 영어 대소문자 숫자허용 
 		            // 입력된 문자열이 완성된 한글 또는 영어인 경우
+		            alert("제대로입력한듯")
 		            
 		        	  return true;
 		          
 		        } else {
 		            // 다른 문자가 입력된 경우
 		            alert("이름과 주소는 올바른 한글만 입력할수 있습니다.");
-		            newValue = ""; // 입력된 값을 비웁니다.
+		            $("#"+elementID).focus();
 		        
 		           return false;
 		        }
@@ -57,13 +55,7 @@ function validateAndSubmit() {
         alert("잘못된 이름입니다. 완성된 한글만 입력하세요.");
         return false; // 폼 제출 방지
     }
-	
-    if (/\s/.test(value)) {
-        input.value = value.replace(/\s/g, "");
-        alert("중간에 공백을 포함할 수 없습니다.");
-        return false; // 폼 제출 방지
-    }
-    
+
    
     return true; // 폼 제출
 }
@@ -116,7 +108,7 @@ function validateInput(input) {
         // 한글과 영어, 한글 자소가 아닌 문자가 입력되었을 때
         var newValue = value.replace(/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/g, "");
         input.value = newValue; // 입력 요소의 값을 변경
-        alert("한글과 영어, 한글 자소만 입력할 수 있습니다.");
+        alert("한글과 영어만 입력할 수 있습니다.");
    
     }
 
@@ -141,6 +133,7 @@ function validateInput(input) {
 	        alert("숫자와 영어만 입력할 수 있습니다.");
 	    }
 	}
+	
 	
 	
 
@@ -250,6 +243,16 @@ function validateInput(input) {
 			return false;
 		}
 		
+		if(name.length < 2 ) {
+			
+			$("#name").focus();
+			
+			
+			alert("이름을 정확히 입력해주세요");
+			
+			return false;
+		}
+		
 		
 		
 		
@@ -276,36 +279,14 @@ function validateInput(input) {
 			return false;
 		}
 		
-		
-		
-		$.ajax({
-			
-			url : "./joincreateid", //
-			type : "post",
-			dataType : "json", // {result : 0}
-			data : formData,
-			success : function(data) {
-				console.log(data);
-				console.log(data.result);
-				
-			
-			//if(data.result==1) {
-				//alert("data.result"+data.result);
-				//console.log("성공적");
-			
-			
-			},
-			
-			error: function(request,status,error){
-				$("#resultMSG").text("오류가 발생 했습니다. 가입할 수 없습니다.");
-			}
-			
-			
+		//var formElement = document.getElementById("joinform");
+		//var formData = new FormData(formElement);
 	
-		}); //  ajax 시작 선언
+		 
 		
-		if(validateKoreanck()) {
-			
+				
+		if(validateKoreanck(addr,"addr") && validateKoreanck(name,"koreanInput")) {
+			joincreateid (formData); ////db에 신규회원 insert문
 			alert("회원가입성공");
 			return true;
 			
@@ -315,13 +296,146 @@ function validateInput(input) {
 			
 		}
 	
-		return true;
 		
+		
+
 	
 
 	}
+	
+	//db에 신규회원 insert문
+	function joincreateid (formData) {
+			
 
+			//db에 신규회원 insert문
+			$.ajax({
+				
+				url : "./joincreateid", //
+				type : "post",
+				dataType : "json", // {result : 0}
+				data : formData,
+			
+				success : function(data) {   
+					location.href = "./login";
+					console.log("result"+data.result);
+				
+				//if(data.result==1) {
+					//alert("data.result"+data.result);
+			
+				
+				
+				},
+				
+				error: function(request,status,error){
+					$("#resultMSG").text("오류가 발생 했습니다. 가입할 수 없습니다.");
+					
+					return false;
+				}
+				
+				
+		
+			}); //  ajax 끝
+			
+		}
+		
+		/*	
+		let pw = $(".joinPw").val();
+		let id = $("#id").val();
+		let pwck = $(".joinPwck").val();
+		let name = $("#koreanInput").val();
+		let addr = $("#addr").val();
+		let birth = $("#birth").val();
+		let birth2 = $("#birth2").val();
+		let phonenum 
+			
+			function serchid() {
+			
+			
+			$.ajax({
+				
+				url : "./serchid", //
+				type : "post",
+				dataType : "json", // {result : 0}
+			
+				success : function(data) {   
+					 $(".loginForm").hide(); 
+					 
+					 var serchid = 
+					 '<form class="serchid" action="./login" method="post">'
+						+ '<div class="serchid">'
+						+ '이름: '
+						+ '<div><input id="koreanInput" name="name" type="text"'
+						+'placeholder="이름" required="required" maxlength="20"'
+						+'oninput="validateKoreanEnglish1(this)"/></div>'
+						+ '주민등록번호: '
+						+ '<div><input name="birth" id="birth" required="required"' 
+						+'class="joinNum" type="text" oninput="validateNumbers2(this)"' 
+						+'placeholder="주민등록번호 앞자리" maxlength="6" minlength="6"/>'
+						+'<input name="birth2" id="birth2" required="required" class="joinNum"'
+						+'type="password" oninput="validateNumbers2(this)" placeholder="주민등록번호 뒷자리"'
+						+'maxlength="7" minlength="7"/></div>'
+						+ '</div>'
+						+ '<span>'
+						+ '<button class="serch" type="submit" onclick=""/>조회</button>'
+						+ '<button class="reset" type="reset" onclick=""/>닫기</button>'
+						+ '</span>' + '</form>';
+				$("body").append(serchid); // 조회창 구현 
+				serchck();
+				
+				},
+				
+				error: function(request,status,error){
+					$("#resultMSG").text("오류가 발생 했습니다. 가입할 수 없습니다.");
+					
+					return false;
+				}
+		
+			
+		});
+		}
+				
+		function serchck() { 
+			
+			 var name = $("#koreanInput").val();
+			    var birth = $("#birth").val();
+			    var birth2 = $("#birth2").val();
 
+			
+		
+		
+				$.ajax({
+					
+					url : "./serchck", //
+					type : "post",
+					dataType : "json", // {result : 0}
+					data : {"name": name, 
+							"birth":birth,
+							"birth2":birth2,
+							
+					},
+				
+					success : function(data) {   
+						 $(".loginForm").hide(); 
+					
+						 alert("아이디는");
+					//if(data.result==1) {
+						//alert("data.result"+data.result);
+				
+					
+					
+					},
+					
+					error: function(request,status,error){
+						$("#resultMSG").text("오류가 발생 했습니다. 가입할 수 없습니다.");
+						
+						return false;
+					}
+			
+				
+			});
+				}
+
+*/
 </script>
 
 </head>

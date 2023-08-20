@@ -4,11 +4,23 @@ package com.bank.login;
 public class LoginDTO {
 
 
+	public String getT_others_account_number() {
+		return t_others_account_number;
+	}
+	public void setT_others_account_number(String t_others_account_number) {
+		this.t_others_account_number = t_others_account_number;
+	}
 	private int m_no,m_grade,count ;
-	private String m_id,m_pw,m_name,m_addr,m_personal_id_number,m_phone,m_gender,m_email,m_joindate,a_account_number;
-	private long a_balance;
+	private String m_id,m_pw,m_name,m_addr,m_personal_id_number,m_phone,m_gender,m_email,m_joindate,a_account_number,t_others_account_number;
+	private long a_balance,t_amount;
 	public long getA_balance() {
 		return a_balance;
+	}
+	public long getT_amount() {
+		return t_amount;
+	}
+	public void setT_amount(long t_amount) {
+		this.t_amount = t_amount;
 	}
 	public void setA_balance(long a_balance) {
 		this.a_balance = a_balance;
