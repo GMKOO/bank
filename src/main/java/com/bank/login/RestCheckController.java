@@ -23,7 +23,7 @@ public class RestCheckController {
 		LoginDTO dto = new LoginDTO();
 		dto.setM_id(id);
 		dto.setM_pw(pw);
-		int interval = 600; 
+		int interval = 40; 
 		LoginDTO checkLogin = loginService.checkID(dto);
 		json.put("result", checkLogin.getCount());
 		json.put("interval",interval);

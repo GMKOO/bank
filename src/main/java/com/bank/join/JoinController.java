@@ -50,10 +50,17 @@ public class JoinController {
 		
 			
 			@PostMapping("/joincreateid")
-			public ResponseEntity<String> joinCreateID(JoinDTO dto) {
+			public ResponseEntity<String> joinCreateID(JoinDTO dto,String account) {
 			
+				
+				
+				
+			dto.setAccount(account);
+				
+			//System.out.println("account생성" + accountNumber);
 			Boolean result = loginService.joinCreateID(dto);
 				
+			System.out.println(account);
 			JSONObject json = new JSONObject();
 			System.out.println(result);
 		

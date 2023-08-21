@@ -58,6 +58,14 @@ public class JoinDTO {
 		this.phonenum = phonenum;
 	}
 
-	private String id,pw1,name,addr,birth,birth2,phonenum;
+	private String id,pw1,name,addr,birth,birth2,phonenum,account;
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
 }

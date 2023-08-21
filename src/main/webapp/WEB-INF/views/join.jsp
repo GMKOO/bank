@@ -287,6 +287,7 @@ function validateInput(input) {
 				
 		if(validateKoreanck(addr,"addr") && validateKoreanck(name,"koreanInput")) {
 			joincreateid (formData); ////db에 신규회원 insert문
+			generateRandomAccountNumber(16);
 			alert("회원가입성공");
 			return true;
 			
@@ -305,8 +306,21 @@ function validateInput(input) {
 	
 	//db에 신규회원 insert문
 	function joincreateid (formData) {
-			
+		/*
+	}
+			var accountnum = generateRandomAccountNumber();
+		 var additionalData = {"account" : accountnum};
 
+	   
+		 console.log("form" + formData) ;
+		 console.log("account1" + accountnum) ;
+
+		 var dataToSend = {
+			        "formData": formData,
+			        "account": accountnum
+			    };
+		 
+		 */
 			//db에 신규회원 insert문
 			$.ajax({
 				
@@ -436,6 +450,17 @@ function validateInput(input) {
 				}
 
 */
+
+function generateRandomAccountNumber() {
+	  const characters = '0123456789';
+	  let accountNumber = '';
+	  for (let i = 0; i < 16; i++) {
+	    const randomIndex = Math.floor(Math.random() * characters.length);
+	    accountNumber += characters.charAt(randomIndex);
+	  }
+	  return accountNumber;
+	}
+
 </script>
 
 </head>

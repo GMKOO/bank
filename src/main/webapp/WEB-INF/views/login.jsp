@@ -1038,7 +1038,7 @@ return;
 
 
 
-	<button type="button" onclick="location.href='./'">홈으로</button>
+	<button type="button" onclick="location.href='./home'">홈으로</button>
 
 </body>
 </html>
