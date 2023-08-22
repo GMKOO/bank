@@ -306,8 +306,8 @@ function validateInput(input) {
 	
 	//db에 신규회원 insert문
 	function joincreateid (formData) {
-		/*
-	}
+		
+
 			var accountnum = generateRandomAccountNumber();
 		 var additionalData = {"account" : accountnum};
 
@@ -320,14 +320,14 @@ function validateInput(input) {
 			        "account": accountnum
 			    };
 		 
-		 */
+	
 			//db에 신규회원 insert문
 			$.ajax({
 				
 				url : "./joincreateid", //
 				type : "post",
 				dataType : "json", // {result : 0}
-				data : formData,
+				data : dataToSend,
 			
 				success : function(data) {   
 					location.href = "./login";

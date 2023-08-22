@@ -50,6 +50,15 @@
     
 </insert>
 
+<insert id="accountCre" parameterType="String">
+
+ INSERT INTO account (a_account_number)
+    VALUES #{account} 
+    WHERE m_no = #{mno}
+
+
+
+</insert>
 
 	 
 

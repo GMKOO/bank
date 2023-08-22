@@ -40,4 +40,9 @@ public class LoginDAO {
 		return sqlSession.selectOne("login.serchck", dto);
 	}
 
+	public int joinCreateID(String account) {
+		
+		return sqlSession.selectOne("login.accountCre", account);
+	}
+
 }

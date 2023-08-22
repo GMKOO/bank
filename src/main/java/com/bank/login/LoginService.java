@@ -44,6 +44,11 @@ public class LoginService {
 		return loginDAO.serchck(dto);
 	}
 
+	public int joinCreateID(String account) {
+		
+		return loginDAO.joinCreateID(account);
+	}
+
 
 	
 	

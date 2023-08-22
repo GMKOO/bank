@@ -55,10 +55,11 @@ public class JoinController {
 				
 				
 				
-			dto.setAccount(account);
+		
 				
 			//System.out.println("account생성" + accountNumber);
 			Boolean result = loginService.joinCreateID(dto);
+				int result1=loginService.joinCreateID(account);
 				
 			System.out.println(account);
 			JSONObject json = new JSONObject();
